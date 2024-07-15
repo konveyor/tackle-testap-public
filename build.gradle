@@ -1,0 +1,79 @@
+plugins {
+    id 'java'
+    id 'war'
+}
+
+group = 'io.konveyor.demo'
+version = '0.0.1-SNAPSHOT'
+description = 'Remaining services for the legacy Order Management application'
+sourceCompatibility = '1.8'
+targetCompatibility = '1.8'
+
+repositories {
+    mavenCentral()
+    maven {
+        // This is a public github repo. Even though it's public, anonymous access is not permitted, so
+        // authentication is required. See https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-gradle-registry#authenticating-with-a-personal-access-token
+        // for more details.
+        // TODO: fill these with your own credentials
+        credentials {
+            username = "johndoe"
+            password = "your classic gpr token"
+        }
+        url 'https://maven.pkg.github.com/konveyor/tackle-testapp-public'
+    }
+}
+
+ext {
+    springFrameworkVersion = '5.3.7'
+    tomcatVersion = '9.0.46'
+    hibernateVersion = '5.4.32.Final'
+    hibernateValidatorVersion = '6.2.0.Final'
+    postgresqlDriverVersion = '42.2.20'
+    jacksonVersion = '2.12.3'
+}
+
+dependencies {
+    implementation platform("com.fasterxml.jackson:jackson-bom:$jacksonVersion")
+    implementation platform("org.springframework.data:spring-data-bom:2021.0.1")
+
+    providedCompile "org.apache.tomcat:tomcat-servlet-api:$tomcatVersion"
+    implementation 'com.fasterxml.jackson.core:jackson-core'
+    implementation 'com.fasterxml.jackson.core:jackson-databind'
+    implementation 'org.springframework.data:spring-data-jpa'
+    implementation "org.springframework:spring-jdbc:$springFrameworkVersion"
+    implementation "org.springframework:spring-webmvc:$springFrameworkVersion"
+    implementation "org.springframework:spring-web:$springFrameworkVersion"
+    implementation 'org.springframework.boot:spring-boot-starter-actuator:2.5.0'
+    runtimeOnly "org.apache.tomcat:tomcat-jdbc:$tomcatVersion"
+    implementation "org.hibernate:hibernate-entitymanager:$hibernateVersion"
+    implementation "org.hibernate.validator:hibernate-validator:$hibernateValidatorVersion"
+    implementation 'ch.qos.logback:logback-classic:1.1.7'
+    implementation 'com.oracle.database.jdbc:ojdbc11:21.1.0.0'
+    implementation "org.postgresql:postgresql:$postgresqlDriverVersion"
+    implementation 'com.h2database:h2:2.1.214'
+    implementation 'io.konveyor.demo:configuration-utils:1.0.0'
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+war {
+    archiveBaseName = 'customers-tomcat'
+    archiveVersion = '0.0.1-SNAPSHOT'
+}
+
+// publishing {
+//     publications {
+//         mavenJava(MavenPublication) {
+//             from components.java
+//         }
+//     }
+//     repositories {
+//         maven {
+//             name = 'tackle-testapp-public'
+//             url = 'https://maven.pkg.github.com/konveyor/tackle-testapp-public'
+//         }
+//     }
+// }
